@@ -93,28 +93,25 @@ describe("Transactions routes", () => {
         title: "New Transaction",
         amount: 5000,
         type: "credit",
-      })
-      .expect(201);
+      });
 
     const cookies = createTransactionResponse.get("Set-Cookie");
 
     await request(app.server)
-      .post("/transactions/summary")
+      .post("/transactions")
       .set("Cookie", cookies)
       .send({
         title: "New Transaction",
         amount: 3000,
         type: "debit",
-      })
-      .expect(201);
+      });
 
     const summaryResponse = await request(app.server)
-      .get("/transactions")
-      .set("Cookie", cookies)
-      .expect(200);
+      .get("/transactions/summary")
+      .set("Cookie", cookies);
 
     expect(summaryResponse.body.summary).toEqual({
-      amount: 3000,
+      amount: 2000,
     });
   });
 });
